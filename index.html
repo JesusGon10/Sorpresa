@@ -1,0 +1,111 @@
+    <!DOCTYPE html> 
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mi niña</title>
+    <style>                      
+        body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+        color: white;
+        }
+        .screen {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        }
+        .active {
+        display: flex;
+        }
+        .password-screen {
+        flex-direction: column;
+        }
+        .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 60px);
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+        }
+        /* Estilo nuevo para los botones */
+        .key {
+        background-color: black;
+        color: white;
+        font-size: 20px;
+        padding: 15px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0px 5px 15px rgba(0, 200, 255, 0.6);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .key:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px 8px 20px rgba(0, 200, 255, 0.8);
+        }
+        .input-display {
+        border: 3px solid #33a3ff;
+        box-shadow: 0px 5px 15px rgba(0, 200, 255, 0.6);
+        padding: 10px;
+        border-radius: 30px;
+        width: 160px;
+        font-size: 24px;
+        margin-top: 20px;
+        letter-spacing: 8px;
+        background-color: black;
+        color: white;
+        }
+    </style>
+    </head>
+    <body>
+
+    <div id="passwordScreen" class="screen password-screen active">
+    <h2>🔒 Enter password</h2>
+    <div class="input-display" id="inputDisplay">••••••</div>
+    <div class="keypad">
+        <button class="key" onclick="enterDigit('1')">1</button>
+        <button class="key" onclick="enterDigit('2')">2</button>
+        <button class="key" onclick="enterDigit('3')">3</button>
+        <button class="key" onclick="enterDigit('4')">4</button>
+        <button class="key" onclick="enterDigit('5')">5</button>
+        <button class="key" onclick="enterDigit('6')">6</button>
+        <button class="key" onclick="enterDigit('7')">7</button>
+        <button class="key" onclick="enterDigit('8')">8</button>
+        <button class="key" onclick="enterDigit('9')">9</button>
+        <div></div>
+        <button class="key" onclick="enterDigit('0')">0</button>
+        <div></div>
+    </div>
+    </div>
+
+    <script>
+  const correctPassword = '912012';
+  let input = '';
+
+  function enterDigit(digit) {
+    if (input.length < 6) {
+      input += digit;
+    }
+
+    const display = document.getElementById('inputDisplay');
+    display.textContent = input.padEnd(6, '•');
+
+    if (input.length === 6) {
+      if (input === correctPassword) {
+        // Redirige a la página en la carpeta "paginas"
+        window.location.href = '1.html';
+      } else {
+        alert('Contraseña incorrecta, intenta de nuevo');
+        input = '';
+        display.textContent = '••••••';
+      }
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi niña</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(to top, #2c3e50, #34495e);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .note {
+      position: absolute;
+      width: 300px;
+      background-color: rgba(240, 248, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      z-index: 1;
+      text-align: center;
+      font-weight: 500;
+      color: #2c3e50;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      backdrop-filter: blur(3px);
+      top: 45%;
+      left: 50%;
+      transform: rotate(5deg) translate(-50%, -50%);
+    }
+
+    .note.show {
+      opacity: 1;
+    }
+
+    .pin {
+      width: 18px;
+      height: 18px;
+      background-color: #00bcd4;
+      border-radius: 50%;
+      position: absolute;
+      top: -12px;
+      left: calc(50% - 9px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      border: 2px solid white;
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 2;
+    }
+
+    .buttons button {
+      background-color: #1abc9c;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover {
+      background-color: #16a085;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="note" id="note1">
+    <div class="pin"></div>
+    ¿Sabías que la palabra deseo viene del latín desiderium?
+Se forma de de-, que significa “carencia” o “alejamiento”, y sidera, que significa “estrellas”.
+Su sentido original es algo poético y eterno: la falta de lo que se mira en las estrellas, el anhelo profundo por aquello que se siente ausente o idealizado.
+
+Y entonces lo entendí… tú eres mi deseo.
+Mi deseo es que seas mía, que nunca te vayas de mi vida.
+No sería nada sin la maravillosa y hermosa persona que me amó incluso cuando yo era un desastre.
+  </div>
+
+  <div class="buttons">
+    <button onclick="location.href='4.html'">Volver</button>
+    <button onclick="document.getElementById('note1').classList.add('show')">Revelar</button>
+    <button onclick="window.location.href='6.html'">Siguiente</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let drops = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initDrops();
+    }
+
+    function initDrops() {
+      drops = [];
+      for (let i = 0; i < 200; i++) {
+        drops.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          length: 10 + Math.random() * 20,
+          speed: 4 + Math.random() * 4
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = "rgba(174,194,224,0.5)";
+      ctx.lineWidth = 1;
+      for (let d of drops) {
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x, d.y + d.length);
+        ctx.stroke();
+
+        d.y += d.speed;
+        if (d.y > canvas.height) {
+          d.y = -d.length;
+          d.x = Math.random() * canvas.width;
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+  </script>
+</body>
+</html>

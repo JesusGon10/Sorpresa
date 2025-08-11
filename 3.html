@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi niña</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(to top, #fbc2eb, #a6c1ee);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .note {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 320px;
+      background-color: rgba(255, 245, 255, 0.9); /* tono claro lila/rosado */
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 1;
+      text-align: center;
+      font-weight: 500;
+      color: #5b3a5d; /* tono púrpura oscuro */
+      transform: translate(-50%, -50%) rotate(-3deg); /* inclinación como la primera */
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      backdrop-filter: blur(3px);
+    }
+
+    .note.show {
+      opacity: 1;
+    }
+
+    .pin {
+      width: 18px;
+      height: 18px;
+      background-color: #d16ba5; /* tachuela rosada vibrante */
+      border-radius: 50%;
+      position: absolute;
+      top: -12px;
+      left: calc(50% - 9px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      z-index: 2;
+      border: 2px solid white;
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 2;
+    }
+
+    .buttons button {
+      background-color: #a05da1;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover {
+      background-color: #7c4180;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="note" id="note">
+    <div class="pin"></div>
+    Algún día nos casaremos, y cuando ese día llegue,
+el tiempo se detendrá para contemplar la magia que une dos almas que no se eligieron por azar,
+sino porque estaban destinadas a encontrarse.
+Serás mi refugio, yo seré tu hogar,
+y juntos construiremos un universo donde solo existamos tú y yo,
+una promesa que ni el tiempo ni la distancia podrán romper.
+
+  </div>
+
+  <div class="buttons">
+    <button onclick="location.href='2.html'">Volver</button>
+    <button onclick="document.getElementById('note').classList.add('show')">Revelar</button>
+    <button onclick="window.location.href='4.html'">Siguiente</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let mist = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initMist();
+    }
+
+    function initMist() {
+      mist = [];
+      for (let i = 0; i < 20; i++) {
+        mist.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: 100 + Math.random() * 150,
+          alpha: 0.1 + Math.random() * 0.1,
+          speed: 0.2 + Math.random() * 0.3
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let m of mist) {
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${m.alpha})`;
+        ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+        ctx.fill();
+        m.x += m.speed;
+        if (m.x - m.r > canvas.width) m.x = -m.r;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+  </script>
+</body>
+</html>

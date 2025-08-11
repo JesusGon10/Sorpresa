@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi niña</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #0a0a0a;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .note {
+      position: absolute;
+      width: 280px;
+      padding: 18px;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      color: #222;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      z-index: 2;
+    }
+
+    .note.show {
+      opacity: 1;
+    }
+
+    .note.left {
+      top: 40%;
+      left: 35%;
+      transform: rotate(-4deg) translate(-50%, -50%);
+    }
+
+    .note.right {
+      top: 60%;
+      left: 65%;
+      transform: rotate(4deg) translate(-50%,-50%);
+    }
+
+    .pin {
+      width: 18px;
+      height: 18px;
+      background-color: #fbff00;
+      border-radius: 50%;
+      position: absolute;
+      top: -10px;
+      left: calc(50% - 9px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      border: 2px solid white;
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 3;
+    }
+
+    .buttons button {
+      background-color: #34495e;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover {
+      background-color: #2c3e50;
+    }
+
+    /* Media query para móvil */
+    @media (max-width: 600px) {
+      .note {
+        position: relative !important; /* Para que se ubiquen uno debajo de otro */
+        width: 90% !important;         /* Ocupan casi todo el ancho */
+        margin: 20px auto !important;  /* Centradas y separadas verticalmente */
+        transform: none !important;    /* Quitar rotaciones y transformaciones */
+        top: auto !important;
+        left: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<!-- Nota Izquierda -->
+<div class="note left" id="note1">
+  <div class="pin"></div>
+  Qué miedo… eres tan maravillosa que hasta eso me asusta.
+Siempre fue así, desde el instante en que descubrí que tenía un sentimiento por ti:
+miedo al rechazo, miedo a que mis errores te alejaran, miedo a no poder estar cerca de ti.
+</div>
+
+<!-- Nota Derecha -->
+<div class="note right" id="note2">
+  <div class="pin"></div>
+  Y ahora, ese miedo sigue… pero ha cambiado de forma.
+Ahora temo que un día te vayas de mi vida, que el tiempo o la distancia quieran arrancarte de mis brazos.
+Tengo miedo porque no quiero irme, porque no imagino mi mundo sin ti.
+Miedo de perderlo todo… de perder a quien más amo,
+a quien, en tan poco tiempo, se convirtió en mi paz, en mi refugio,
+y en el amor más grande que jamás he conocido.
+</div>
+
+<!-- Botones -->
+<div class="buttons">
+  <button onclick="location.href='6.html'">Volver</button>
+  <button onclick="revealNotes()">Revelar</button>  
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let drops = [];
+let lightning = false;
+let lightningTimer = 0;
+let lightningPath = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  initDrops();
+}
+
+function initDrops() {
+  drops = [];
+  for (let i = 0; i < 400; i++) {
+    drops.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      length: 15 + Math.random() * 20,
+      speed: 8 + Math.random() * 5
+    });
+  }
+}
+
+function createLightning() {
+  lightningPath = [];
+  let startX = Math.random() * canvas.width;
+  let y = 0;
+  lightningPath.push({x: startX, y});
+
+  while (y < canvas.height) {
+    let nextX = startX + (Math.random() - 0.5) * 80;
+    let nextY = y + Math.random() * 50;
+    lightningPath.push({x: nextX, y: nextY});
+    startX = nextX;
+    y = nextY;
+  }
+}
+
+function drawLightning() {
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(lightningPath[0].x, lightningPath[0].y);
+  for (let p of lightningPath) {
+    ctx.lineTo(p.x, p.y);
+  }
+  ctx.stroke();
+}
+
+function draw() {
+  ctx.fillStyle = lightning ? "rgba(255,255,255,0.8)" : "#0a0a0a";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.strokeStyle = "rgba(174,194,224,0.7)";
+  ctx.lineWidth = 1;
+  for (let d of drops) {
+    ctx.beginPath();
+    ctx.moveTo(d.x, d.y);
+    ctx.lineTo(d.x, d.y + d.length);
+    ctx.stroke();
+
+    d.y += d.speed;
+    if (d.y > canvas.height) {
+      d.y = -d.length;
+      d.x = Math.random() * canvas.width;
+    }
+  }
+
+  if (lightning) {
+    drawLightning();
+    lightningTimer--;
+    if (lightningTimer <= 0) {
+      lightning = false;
+    }
+  }
+
+  if (Math.random() < 0.005 && !lightning) {
+    lightning = true;
+    lightningTimer = 5;
+    createLightning();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+function revealNotes() {
+  document.getElementById('note1').classList.add('show');
+  document.getElementById('note2').classList.add('show');
+}
+
+window.addEventListener('resize', resize);
+resize();
+draw();
+</script>
+</body>
+</html>

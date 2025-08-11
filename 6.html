@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi niña</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(to top, #1e3c72, #2a5298);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .note {
+      position: absolute;
+      width: 300px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      z-index: 1;
+      text-align: center;
+      color: #2a5298;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      top: 45%;
+      left: 50%;
+      transform: rotate(-5deg) translate(-50%, -50%);
+    }
+
+    .note.show {
+      opacity: 1;
+    }
+
+    .pin {
+      width: 18px;
+      height: 18px;
+      background-color: #0077ff;
+      border-radius: 50%;
+      position: absolute;
+      top: -12px;
+      left: calc(50% - 9px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      border: 2px solid white;
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 2;
+    }
+
+    .buttons button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="note" id="note1">
+    <div class="pin"></div>
+    Eres mía
+No necesito cadenas ni promesas para saber que eres mía.
+El alma no se ata, se reconoce.
+Y en cada latido, en cada suspiro, en cada sueño,
+yo te reconozco a ti, a la persona que vino a transformar mi vida.
+Eres mi certeza en medio del caos,
+mi calma cuando el mundo grita,
+y por eso, hoy y siempre, serás mía.
+
+  </div>
+
+  <div class="buttons">
+    <button onclick="location.href='5.html'">Volver</button>
+    <button onclick="document.getElementById('note1').classList.add('show')">Revelar</button>
+    <button onclick="window.location.href='7.html'">Siguiente</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let snowflakes = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initSnow();
+    }
+
+    function initSnow() {
+      snowflakes = [];
+      for (let i = 0; i < 150; i++) {
+        snowflakes.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: 2 + Math.random() * 3,
+          speedY: 0.5 + Math.random() * 1.5,
+          speedX: Math.random() * 0.5 + 0.3,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "white";
+      for (let s of snowflakes) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        s.y += s.speedY;
+        s.x += s.speedX;
+
+        if (s.y > canvas.height) {
+          s.y = -s.r;
+          s.x = Math.random() * canvas.width;
+        }
+        if (s.x > canvas.width) {
+          s.x = -s.r;
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi niña</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(to top, #4facfe, #00f2fe);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .note {
+      position: absolute;
+      width: 300px;
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      z-index: 1;
+      text-align: center;
+      font-weight: 500;
+      color: #2a3d66;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      backdrop-filter: blur(3px);
+    }
+
+    .note.show {
+      opacity: 1;
+    }
+
+    .note-left {
+      top: 40%;
+      left: 35%;
+      transform: rotate(-4deg) translate(-50%, -50%);
+    }
+
+    .note-right {
+      top: 60%;
+      left: 65%;
+      transform: rotate(4deg) translate(-50%, -50%);
+    }
+
+    .pin {
+      width: 18px;
+      height: 18px;
+      background-color: #ffd700;
+      border-radius: 50%;
+      position: absolute;
+      top: -12px;
+      left: calc(50% - 9px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      border: 2px solid white;
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 2;
+    }
+
+    .buttons button {
+      background-color: #2a3d66;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover {
+      background-color: #1a2a45;
+    }
+
+    /* Media query para móvil */
+    @media (max-width: 600px) {
+      .note {
+        position: relative !important; /* Para que se ubiquen uno debajo de otro */
+        width: 90% !important;         /* Ocupan casi todo el ancho */
+        margin: 20px auto !important;  /* Centradas y separadas verticalmente */
+        transform: none !important;    /* Quitar rotaciones y transformaciones */
+        top: auto !important;
+        left: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="note note-left" id="note1">
+    <div class="pin"></div>
+    Qué fácil te sale hacerme feliz, incluso cuando mi corazón se siente perdido,
+cuando el mundo parece pesar más de lo que puedo cargar.
+Tú llegas… y con una palabra, una mirada o un simple gesto, todo se vuelve más ligero.
+  </div>
+
+  <div class="note note-right" id="note2">
+    <div class="pin"></div>
+    Qué fácil te sale hacerme feliz…
+y gracias, amor mío, por ser la dueña de todas mis sonrisas,
+por ser la razón por la que incluso mis días grises tienen un pedazo de cielo.
+  </div>
+
+  <div class="buttons">
+    <button onclick="location.href='3.html'">Volver</button>
+    <button onclick="document.getElementById('note1').classList.add('show'); document.getElementById('note2').classList.add('show')">Revelar</button>
+    <button onclick="window.location.href='5.html'">Siguiente</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let clouds = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initClouds();
+    }
+
+    function initClouds() {
+      clouds = [];
+      for (let i = 0; i < 5; i++) {
+        clouds.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height * 0.5,
+          w: 150 + Math.random() * 150,
+          h: 50 + Math.random() * 30,
+          speed: 0.3 + Math.random() * 0.4
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Sol
+      ctx.beginPath();
+      ctx.arc(canvas.width - 100, 100, 60, 0, Math.PI * 2);
+      ctx.fillStyle = "#FFD700";
+      ctx.fill();
+
+      // Nubes
+      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      for (let c of clouds) {
+        ctx.beginPath();
+        ctx.ellipse(c.x, c.y, c.w, c.h, 0, 0, Math.PI * 2);
+        ctx.fill();
+        c.x += c.speed;
+        if (c.x - c.w > canvas.width) c.x = -c.w;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+  </script>
+</body>
+</html>
